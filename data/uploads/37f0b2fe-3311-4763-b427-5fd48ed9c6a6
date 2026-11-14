@@ -1,0 +1,357 @@
+============================================================
+                 DELTA LAN MESSENGER 2.0
+============================================================
+
+       Private Communication. Local Control.
+                  Your Network.
+
+Delta LAN Messenger is a self-hosted, Discord-inspired
+communication platform designed for Local Area Networks.
+
+It allows users connected to the same private network to
+communicate through a web browser without requiring public
+internet services during normal operation.
+
+The application uses a central Ubuntu server and supports
+real-time messaging, multiple servers, text channels,
+administrative roles, file sharing, folder sharing and
+browser-based voice communication.
+
+============================================================
+1. FEATURES
+============================================================
+
+MESSAGING
+- Real-time text messaging.
+- Multiple servers.
+- Multiple text channels.
+- Persistent message history.
+- Online member presence.
+
+SERVER MANAGEMENT
+- Create and join servers.
+- Discover available servers.
+- Switch and leave servers.
+- Server settings.
+- Member management.
+
+ROLES AND PERMISSIONS
+- Server Owner.
+- Administrator.
+- Member.
+- Channel creation and management.
+- Channel access restrictions.
+
+FILE SHARING
+- Individual file sharing.
+- Multiple file uploads.
+- Complete folder sharing.
+- Folder structure preservation.
+- Upload progress.
+- ZIP folder downloads.
+
+VOICE COMMUNICATION
+- Real-time browser voice chat.
+- WebRTC peer-to-peer audio.
+- Microphone mute controls.
+- Join and leave voice channels.
+
+============================================================
+2. TECHNOLOGY STACK
+============================================================
+
+Backend: Node.js
+Frontend: HTML, CSS, JavaScript
+Real-time Communication: WebSockets
+Voice: WebRTC
+Storage: JSON and Local Filesystem
+Security: HTTPS
+Server: Ubuntu Linux
+Client: Windows, Linux and compatible browsers
+
+============================================================
+3. REQUIREMENTS
+============================================================
+
+SERVER:
+- Ubuntu Linux.
+- Node.js 18 or newer.
+- npm.
+- OpenSSL.
+- Available storage for uploaded files.
+
+CLIENT:
+- Windows, Linux or another compatible operating system.
+- Chrome, Microsoft Edge or another supported browser.
+- Connection to the same reachable private LAN.
+
+============================================================
+4. INSTALLATION ON UBUNTU
+============================================================
+
+STEP 1: UPDATE THE SYSTEM
+
+sudo apt update
+sudo apt upgrade -y
+
+STEP 2: INSTALL REQUIRED PACKAGES
+
+sudo apt install -y nodejs npm openssl unzip dos2unix
+
+STEP 3: CHECK NODE.JS
+
+node --version
+npm --version
+
+Ensure Node.js is version 18 or newer.
+
+STEP 4: EXTRACT THE PROJECT
+
+Extract the downloaded project ZIP file.
+
+Navigate into the extracted project directory:
+
+cd /path/to/delta-lan-messenger-v2
+
+Replace the example path with your actual project location.
+
+STEP 5: SET FILE PERMISSIONS
+
+sudo chown -R "$USER":"$USER" .
+
+STEP 6: FIX SCRIPT LINE ENDINGS
+
+dos2unix scripts/*.sh
+
+STEP 7: MAKE INSTALLATION SCRIPTS EXECUTABLE
+
+chmod +x scripts/*.sh
+
+STEP 8: INSTALL THE APPLICATION
+
+./scripts/install-ubuntu.sh
+
+The installation script prepares dependencies, environment
+configuration and HTTPS certificates.
+
+STEP 9: START THE APPLICATION
+
+npm start
+
+Your Delta LAN Messenger server should now be running.
+
+============================================================
+5. ACCESS THE APPLICATION
+============================================================
+
+After starting the server, access it through a browser.
+
+Use the server's local network address:
+
+https://SERVER-LAN-IP:5000
+
+Replace SERVER-LAN-IP with the actual LAN IP address
+of the Ubuntu server.
+
+For local testing on the Ubuntu computer:
+
+https://localhost:5000
+
+The HTTPS certificate must be trusted by client browsers
+for reliable microphone access.
+
+============================================================
+6. FIND YOUR SERVER IP ADDRESS
+============================================================
+
+To find the Ubuntu server's local IP address:
+
+hostname -I
+
+Or:
+
+ip addr
+
+Use the appropriate LAN address when connecting other
+computers.
+
+============================================================
+7. COMMON SERVER COMMANDS
+============================================================
+
+START SERVER:
+
+npm start
+
+INSTALL DEPENDENCIES:
+
+npm install
+
+RUN TESTS:
+
+npm test
+
+CHECK PORT 5000:
+
+sudo lsof -i :5000
+
+CHECK SERVER HEALTH:
+
+curl -k https://localhost:5000/health
+
+STOP SERVER:
+
+Press CTRL + C in the terminal running the application.
+
+RESTART SERVER:
+
+Stop the existing process using CTRL + C,
+then execute:
+
+npm start
+
+IMPORTANT:
+Do not start another server instance if port 5000
+is already occupied by your running application.
+
+============================================================
+8. WINDOWS CLIENT SETUP
+============================================================
+
+1. Connect to the same private network as the server.
+2. Open Chrome, Edge or another supported browser.
+3. Trust the server's HTTPS certificate.
+4. Visit the server's LAN address.
+5. Choose a display name.
+6. Join a server.
+7. Start messaging and sharing files.
+
+Allow microphone permission to use voice channels.
+
+============================================================
+9. AUTOMATIC SERVER STARTUP
+============================================================
+
+The project includes a systemd service configuration.
+
+The service can be enabled to start automatically
+when Ubuntu boots.
+
+Enable and start:
+
+sudo systemctl enable --now delta-lan-messenger
+
+Check status:
+
+sudo systemctl status delta-lan-messenger
+
+View logs:
+
+sudo journalctl -u delta-lan-messenger -f
+
+============================================================
+10. DATA STORAGE AND BACKUPS
+============================================================
+
+The application stores its data locally.
+
+data/
+  store.json
+  uploads/
+
+store.json:
+Contains server, channel, membership, message and
+file metadata.
+
+uploads/:
+Contains uploaded files.
+
+Back up both locations together.
+
+Stop the application before performing a backup.
+
+============================================================
+11. TROUBLESHOOTING
+============================================================
+
+ERROR: CANNOT FIND MODULE 'EXPRESS'
+
+Solution:
+
+npm install
+
+ERROR: BASH\\r NOT FOUND
+
+Solution:
+
+dos2unix scripts/*.sh
+chmod +x scripts/*.sh
+
+ERROR: INSTALLATION SCRIPT NOT FOUND
+
+Check the correct directory:
+
+ls scripts/
+
+Run:
+
+./scripts/install-ubuntu.sh
+
+ERROR: ADDRESS ALREADY IN USE
+
+Solution:
+
+sudo lsof -i :5000
+
+Check whether another instance of the application
+is already running.
+
+Do not kill an unknown process.
+
+ERROR: WEBSITE CANNOT CONNECT
+
+Check:
+
+sudo lsof -i :5000
+
+Check server health:
+
+curl -k https://localhost:5000/health
+
+Also check the server IP address and firewall settings.
+
+============================================================
+12. SECURITY INFORMATION
+============================================================
+
+Delta LAN Messenger is designed for trusted private
+networks.
+
+Current limitations:
+
+- No authenticated account system.
+- Display names can be impersonated.
+- No end-to-end encryption.
+- The server can read stored messages and files.
+- Channel permissions are not a security boundary
+  against malicious LAN users.
+
+Do not expose the application directly to the public
+internet without implementing appropriate security.
+
+============================================================
+13. PROJECT GOAL
+============================================================
+
+Delta LAN Messenger aims to provide a private,
+self-hosted alternative to traditional communication
+platforms.
+
+It gives users control over their own messaging server,
+communication channels, file storage and voice system.
+
+============================================================
+DELTA LAN MESSENGER 2.0
+PRIVATE COMMUNICATION. LOCAL CONTROL.
+YOUR NETWORK.
+============================================================

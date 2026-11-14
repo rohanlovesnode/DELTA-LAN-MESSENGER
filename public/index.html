@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#313338">
+  <meta name="description" content="Private LAN chat, voice, and file sharing.">
+  <title>Delta LAN Messenger</title>
+  <link rel="stylesheet" href="/styles.css?v=discord-theme-3">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="server-rail" aria-label="Servers">
+      <a class="brand-mark" href="/" title="Delta LAN Messenger" aria-label="Delta LAN Messenger">D<span>.</span></a>
+      <div class="rail-divider"></div>
+      <nav id="server-list" class="server-list" aria-label="Your servers"></nav>
+      <button id="add-server" class="rail-add" title="Add a server" aria-label="Add a server"><span>＋</span></button>
+      <div class="rail-spacer"></div>
+      <div class="rail-network" title="Private LAN">LAN</div>
+    </aside>
+
+    <aside class="channel-sidebar">
+      <header class="workspace-header">
+        <div>
+          <div class="eyebrow">PRIVATE NETWORK</div>
+          <h1 id="active-server-name">Delta LAN</h1>
+        </div>
+        <button id="manage-server" class="icon-button server-menu-button" aria-label="Server settings and members" title="Server settings">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </button>
+      </header>
+      <div class="sidebar-scroll">
+        <div class="section-label"><span>TEXT CHANNELS</span><button id="create-channel" class="section-plus" title="Create text channel" aria-label="Create text channel">+</button></div>
+        <nav id="channel-list" class="channel-list" aria-label="Text channels"></nav>
+        <div class="section-label voice-heading"><span>VOICE CHANNELS</span><span class="live-dot"></span></div>
+        <div id="voice-channel-list" class="voice-channel-list"></div>
+        <div class="sidebar-note">
+          <span class="note-icon">✦</span>
+          <div><strong>Just your network.</strong><p>Messages and files stay on this LAN server.</p></div>
+        </div>
+      </div>
+      <section id="voice-dock" class="voice-dock hidden" aria-live="polite">
+        <div class="voice-dock-info">
+          <span class="voice-wave" aria-hidden="true">◖</span>
+          <div><strong>Voice connected</strong><span id="voice-dock-members">lounge</span></div>
+        </div>
+        <div class="voice-dock-actions">
+          <button id="screen-share-button" class="voice-control" aria-label="Share screen" title="Share screen" disabled>Share screen</button>
+          <button id="stop-sharing-button" class="voice-control hidden" aria-label="Stop sharing" title="Stop sharing">Stop sharing</button>
+          <button id="mute-button" class="voice-control" aria-label="Mute microphone" title="Mute microphone">Mute</button>
+          <button id="deafen-button" class="voice-control" aria-label="Deafen" title="Deafen incoming audio">Deafen</button>
+          <button id="leave-voice" class="leave-button" aria-label="Leave voice channel" title="Leave voice channel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2a8 8 0 0 1 16 0v2"/><path d="M4 12h3v7H5a1 1 0 0 1-1-1zm16 0h-3v7h2a1 1 0 0 0 1-1z"/></svg>
+            <span>Disconnect</span>
+          </button>
+        </div>
+      </section>
+      <div class="profile-bar">
+        <div class="profile-avatar-wrap">
+          <div id="profile-avatar" class="avatar avatar-self">?</div>
+          <i class="profile-status presence-dot" title="Online"></i>
+        </div>
+        <div class="profile-copy"><strong id="profile-name">Set your name</strong><span>Online</span></div>
+        <div class="profile-actions">
+          <button id="edit-name" class="icon-button" aria-label="Change display name" title="Change name">✎</button>
+          <button id="settings-button" class="icon-button settings-button" aria-label="Connection details" title="Connection details">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.5-.9l-1.7.7-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.5.9l1.7-.7 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.7Z"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="channel-header">
+        <button id="mobile-menu" class="icon-button mobile-menu" aria-label="Open channels">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <span class="hash-mark">#</span>
+        <div class="channel-heading">
+          <h2 id="channel-title">general</h2>
+          <p>Good conversations start here.</p>
+        </div>
+        <div class="header-actions">
+          <div class="connection-pill"><span id="connection-dot" class="connection-dot connecting"></span><span id="connection-label">Connecting</span></div>
+          <button id="members-toggle" class="icon-button member-toggle" aria-label="Toggle members" title="Toggle members">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="9.5" cy="7" r="3.5"/><path d="M17 11a3.5 3.5 0 0 0 0-7m4 16v-1.5a4 4 0 0 0-3-3.87"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="chat-layout">
+        <section class="chat-column">
+          <section id="voice-stage" class="voice-stage hidden" aria-label="Voice channel">
+            <header class="voice-stage-header">
+              <div><div class="eyebrow">VOICE CHANNEL</div><h2 id="voice-stage-title">Voice</h2></div>
+              <span id="voice-stage-live" class="voice-live-badge">● Connected</span>
+            </header>
+            <div id="screen-share-list" class="screen-share-list">
+              <div class="screen-share-empty">No one is sharing their screen yet.</div>
+            </div>
+            <section class="share-settings" aria-label="Screen sharing quality settings">
+              <label>Preset
+                <select id="share-preset">
+                  <option value="low">Low</option>
+                  <option value="balanced" selected>Balanced</option>
+                  <option value="high">High</option>
+                  <option value="ultra">Ultra</option>
+                </select>
+              </label>
+              <label>Resolution
+                <select id="share-resolution">
+                  <option value="480">480p</option>
+                  <option value="720" selected>720p</option>
+                  <option value="1080">1080p</option>
+                  <option value="source">Source / Original</option>
+                </select>
+              </label>
+              <label>Frame rate
+                <select id="share-framerate">
+                  <option value="15">15 FPS</option>
+                  <option value="30" selected>30 FPS</option>
+                  <option value="60">60 FPS</option>
+                </select>
+              </label>
+              <label class="share-audio-option"><input id="share-audio" type="checkbox"> Share system/tab audio when available</label>
+              <p>Choose Entire Screen, Window, or Browser Tab in the browser picker. Audio availability depends on your browser and operating system.</p>
+            </section>
+            <div id="voice-participants" class="voice-participants"></div>
+          </section>
+          <div id="welcome-card" class="welcome-card">
+            <div class="welcome-icon">✦</div>
+            <div><h3>Welcome to <span>Delta LAN</span></h3><p>A quiet corner of your local network. Say hello, share a file, or hop into voice.</p></div>
+          </div>
+          <div id="message-list" class="message-list" role="log" aria-live="polite" aria-label="Messages"></div>
+          <div id="upload-progress-list" class="upload-progress-list" aria-live="polite"></div>
+          <form id="composer" class="composer">
+            <label class="attach-button" title="Share files" aria-label="Share files">
+              <span>＋</span><input id="file-input" type="file" multiple>
+            </label>
+            <label class="attach-button folder-attach-button" title="Share a folder" aria-label="Share a folder">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 10h18"/></svg>
+              <input id="folder-input" type="file" webkitdirectory directory multiple>
+            </label>
+            <input id="message-input" autocomplete="off" maxlength="4000" placeholder="Message #general" aria-label="Write a message">
+            <button type="submit" class="send-button" aria-label="Send message" title="Send message">↑</button>
+          </form>
+          <div class="composer-hint">Enter to send <span>·</span> Files transfer directly through your LAN server</div>
+        </section>
+        <aside id="members-panel" class="members-panel">
+          <div class="members-title">MEMBERS <span id="member-count">0</span></div>
+          <div id="member-list" class="member-list"></div>
+          <div class="privacy-card"><span>⌑</span><div><strong>Private by design</strong><p>Only devices connected to this LAN can reach this server.</p></div></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div id="name-dialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="name-title">
+    <form id="name-form" class="dialog-card">
+      <div class="dialog-mark">D<span>.</span></div>
+      <div class="eyebrow">WELCOME TO YOUR NETWORK</div>
+      <h2 id="name-title">What should we call you?</h2>
+      <p>Choose a display name so others on this LAN know it's you.</p>
+      <input id="name-input" maxlength="32" autocomplete="nickname" placeholder="e.g. Alex" required>
+      <button class="primary-button" type="submit">Join Delta LAN <span>→</span></button>
+      <div id="name-error" class="dialog-error"></div>
+    </form>
+  </div>
+
+  <div id="server-dialog" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="server-dialog-title">
+    <div class="dialog-card server-dialog">
+      <header class="server-dialog-header">
+        <div><div class="eyebrow">DELTA LAN</div><h2 id="server-dialog-title">Servers</h2></div>
+        <button id="close-server-dialog" class="icon-button" aria-label="Close server manager">✕</button>
+      </header>
+      <nav class="server-tabs" aria-label="Server management">
+        <button type="button" class="server-tab active" data-tab="discover">Discover</button>
+        <button type="button" class="server-tab" data-tab="create">Create</button>
+        <button id="channels-tab" type="button" class="server-tab hidden" data-tab="channels">Channels</button>
+        <button type="button" class="server-tab" data-tab="settings">Settings</button>
+      </nav>
+      <section id="server-discover-panel" class="server-tab-panel">
+        <p class="server-panel-copy">Join a server on this LAN or switch between servers you already belong to.</p>
+        <div id="server-discovery-list" class="server-discovery-list"></div>
+      </section>
+      <section id="server-create-panel" class="server-tab-panel hidden">
+        <p class="server-panel-copy">Start a separate space with its own channels, members, files, and chat history.</p>
+        <form id="create-server-form" class="server-form">
+          <label>Server name<input id="create-server-name" maxlength="48" placeholder="e.g. Design Team" required></label>
+          <label>Description <span class="optional-label">OPTIONAL</span><textarea id="create-server-description" maxlength="160" placeholder="What is this server for?"></textarea></label>
+          <button type="submit" class="primary-button">Create server <span>→</span></button>
+          <div id="create-server-error" class="dialog-error"></div>
+        </form>
+      </section>
+      <section id="server-channels-panel" class="server-tab-panel hidden">
+        <p class="server-panel-copy">Create and organize text channels. Restrict a channel to selected server members when needed.</p>
+        <div id="channel-management-list" class="channel-management-list"></div>
+        <form id="create-channel-form" class="server-form channel-create-form">
+          <label>New text channel<input id="create-channel-name" maxlength="32" placeholder="e.g. announcements" required></label>
+          <label>Who can access it?
+            <select id="create-channel-mode">
+              <option value="all">All server members</option>
+              <option value="members">Selected members only</option>
+            </select>
+          </label>
+          <label id="create-channel-members-label" class="channel-members-label hidden">Allowed display names, one per line
+            <textarea id="create-channel-members" placeholder="Alex&#10;Sam"></textarea>
+          </label>
+          <button type="submit" class="primary-button">Create text channel <span>→</span></button>
+          <div id="create-channel-error" class="dialog-error"></div>
+        </form>
+      </section>
+      <section id="server-settings-panel" class="server-tab-panel hidden">
+        <p id="server-settings-note" class="server-panel-copy"></p>
+        <form id="server-settings-form" class="server-form">
+          <label>Server name<input id="settings-server-name" maxlength="48" required></label>
+          <label>Description<textarea id="settings-server-description" maxlength="160"></textarea></label>
+          <label>Accent color<input id="settings-server-color" type="color" value="#9274ff"></label>
+          <label>Server admins <span class="optional-label">ONE DISPLAY NAME PER LINE</span><textarea id="settings-server-admins" placeholder="Members you trust to manage channels"></textarea></label>
+          <button type="submit" class="primary-button">Save settings <span>→</span></button>
+          <div id="server-settings-error" class="dialog-error"></div>
+        </form>
+        <button id="leave-server" type="button" class="leave-server-button">Leave this server</button>
+      </section>
+    </div>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="/app.js?v=discord-theme-3" defer></script>
+</body>
+</html>
