@@ -22,7 +22,7 @@ Owners and admins can open **Channels** to create, rename, delete, and reorder t
 
 This initial LAN version has no authenticated accounts or invitation secrets. Server membership and owner/admin checks use self-selected display names, so anyone on the LAN can impersonate a name or join a discoverable server. Channel allowlists are useful organization controls, not a security boundary against a hostile LAN user. Do not expose the app beyond a trusted private network.
 
-## Ubuntu deployment (192.168.101.50)
+## Ubuntu deployment (192.168.101.x)
 
 Commands below assume the project is extracted to `/opt/delta-lan-messenger`. Install Node.js 18+ and OpenSSL before installing. For example, on Ubuntu with the distribution Node.js version available:
 
@@ -45,7 +45,7 @@ chmod +x scripts/*.sh
 ./scripts/install-ubuntu.sh
 ```
 
-The setup script installs locked production dependencies, creates `.env` from `.env.example`, and creates a self-signed HTTPS certificate whose IP Subject Alternative Name is `192.168.101.50`. Review `.env`; defaults are:
+The setup script installs locked production dependencies, creates `.env` from `.env.example`, and creates a self-signed HTTPS certificate whose IP Subject Alternative Name is `192.168.101.x`. Review `.env`; defaults are:
 
 ```dotenv
 HOST=0.0.0.0
@@ -72,15 +72,15 @@ curl -k https://127.0.0.1:5000/health
 Expected JSON includes `"status":"ok"`. Configure the host firewall for the private Ethernet interface/subnet only. With UFW and the specified client:
 
 ```bash
-sudo ufw allow from 192.168.101.98 to 192.168.101.50 port 5000 proto tcp
+sudo ufw allow from 192.168.101.x to 192.168.101.x port 5000 proto tcp
 sudo ufw status
 ```
 
-Do not add a public-interface or router port-forwarding rule. Confirm the Ubuntu host's Ethernet IP is actually `192.168.101.50`.
+Do not add a public-interface or router port-forwarding rule. Confirm the Ubuntu host's Ethernet IP is actually `192.168.101.x`.
 
 ### Trust the local HTTPS certificate
 
-The certificate is self-signed. For microphone access without browser warnings, transfer `certs/server.crt` to Windows over a trusted private method (for example, a USB drive). On Windows, open `mmc.exe`, add the **Certificates** snap-in for **Computer account**, and import the certificate into **Trusted Root Certification Authorities > Certificates**. Restart the browser and open `https://192.168.101.50:5000`.
+The certificate is self-signed. For microphone access without browser warnings, transfer `certs/server.crt` to Windows over a trusted private method (for example, a USB drive). On Windows, open `mmc.exe`, add the **Certificates** snap-in for **Computer account**, and import the certificate into **Trusted Root Certification Authorities > Certificates**. Restart the browser and open `https://192.168.101.x:5000`.
 
 Alternatively, on your own private LAN you may use Chrome/Edge's certificate warning page and proceed to the site, but this is less reliable for microphone permission and leaves the warning. Never trust a certificate received over an untrusted network. Delete the copied certificate from Downloads after importing it.
 
@@ -102,16 +102,16 @@ The included unit expects the extracted directory at `/opt/delta-lan-messenger` 
 
 ## Windows client
 
-1. Connect the Windows computer to the private Ethernet LAN and confirm it can reach `192.168.101.50`.
+1. Connect the Windows computer to the private Ethernet LAN and confirm it can reach `192.168.101.x`.
 2. Trust the server certificate as described above, or proceed past the self-signed certificate warning on this private LAN.
-3. Open `https://192.168.101.50:5000` in a current Chrome or Edge browser.
+3. Open `https://192.168.101.x:5000` in a current Chrome or Edge browser.
 4. Choose a display name. Allow microphone access when joining **lounge**. Use the Mute, Deafen, and Disconnect controls in the voice dock. Mute disables only your microphone; Deafen silences incoming participant audio without muting your microphone.
 5. To share, join a voice channel and choose a quality preset or set resolution and frame rate in the voice screen. Press **Share screen**, then choose an entire screen, application window, or browser tab in the browser's capture picker. Press **Stop sharing** or stop capture from the browser indicator to end the share. Select **Share system/tab audio** before starting; available audio sources depend on the browser, operating system, and selected surface. The UI reports when capture audio is unavailable.
 6. Use the composer’s plus control to choose files, or its folder control to choose a folder. Folder selection requires a Chromium-based browser such as Chrome or Edge. The browser shares files and nested paths; empty directories are not exposed by its folder input. Keep the tab open until progress shows Complete.
 
 Voice and screen media use a peer-to-peer full mesh, not an SFU. Each participant sends media directly to every other participant; in particular, each screen sharer uploads a separate video stream to every viewer. Bandwidth and CPU use therefore grow with participant count, and this is intended for small voice rooms—not large or unlimited audiences. A 1 Gbps server link does not remove the upload, decode, and encode costs on each client. The signaling server does not relay media. ICE uses browser host candidates only, so devices must be able to reach each other directly on the LAN. WebSocket heartbeats detect dead clients, and stalled peer connections trigger reconnection attempts.
 
-The application already serves HTTPS by default (`TLS_ENABLED=true`); screen capture, like microphone capture, requires a secure browser context. The Ubuntu install script generates the IP certificate for `192.168.101.50`. On Windows, transfer `certs/server.crt` using a trusted private method, run `mmc.exe`, add **Certificates > Computer account**, and import it into **Trusted Root Certification Authorities > Certificates**. Restart Chrome or Edge and open `https://192.168.101.50:5000`. The browser still asks for permission each time a user starts capture. If capture is unsupported, the page is not trusted HTTPS, or permission is denied, the app displays a message rather than faking a share.
+The application already serves HTTPS by default (`TLS_ENABLED=true`); screen capture, like microphone capture, requires a secure browser context. The Ubuntu install script generates the IP certificate for `192.168.101.x`. On Windows, transfer `certs/server.crt` using a trusted private method, run `mmc.exe`, add **Certificates > Computer account**, and import it into **Trusted Root Certification Authorities > Certificates**. Restart Chrome or Edge and open `https://192.168.101.x:5000`. The browser still asks for permission each time a user starts capture. If capture is unsupported, the page is not trusted HTTPS, or permission is denied, the app displays a message rather than faking a share.
 
 Screen-share presets set capture constraints and WebRTC maximum bitrate/frame rate: Low (480p/15 FPS/0.6 Mbps), Balanced (720p/30 FPS/2.5 Mbps), High (1080p/30 FPS/5 Mbps), and Ultra (source resolution/60 FPS/8 Mbps). Browser, operating-system, hardware, and display-source limits may reduce the actual result; selected maximums are not a guarantee of capture capability.
 
@@ -132,7 +132,7 @@ For local HTTP development only, set `TLS_ENABLED=false` in `.env`, or on Window
 
 ## Troubleshooting
 
-- **Certificate missing:** run `./scripts/generate-cert.sh 192.168.101.50` from the project directory and verify `.env` paths.
+- **Certificate missing:** run `./scripts/generate-cert.sh 192.168.101.x` from the project directory and verify `.env` paths.
 - **Browser certificate warning / microphone unavailable:** import the correct IP-SAN certificate into Windows' local computer Trusted Root store, restart Chrome/Edge, then reload the HTTPS URL.
 - **Cannot connect:** check `systemctl status delta-lan-messenger`, `sudo journalctl -u delta-lan-messenger`, `curl -k https://127.0.0.1:5000/health`, Ubuntu's Ethernet IP, and the UFW rule.
 - **Upload interrupted:** the partial file is discarded and removed; retry the upload. Ensure there is sufficient free space in `UPLOAD_DIR`, and do not close the tab during transfer.
